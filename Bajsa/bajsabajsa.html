@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bajsa</title>
+	<style>
+	html, body {
+		overflow: hidden;
+	}
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        margin: 0;
+		background-color: olive;
+    }
+	h1 {
+		font-family: "Comic Sans MS", cursive; 
+		font-size: 5vw; /* 5% av fönstrets bredd */
+		text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+		transform: rotate(-1deg);
+		background: linear-gradient(to right, #4E3629, #2F1B0A);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		animation: prutt 1s ease-in-out;
+		position: relative;
+	}
+	@keyframes prutt {
+		0% { transform: translateX(-20px) scale(0.9) rotate(-5deg); opacity: 0; }
+		50% { transform: translateX(20px) scale(1.1) rotate(5deg); opacity: 1; }
+		100% { transform: translateX(0) scale(1) rotate(0deg); }
+	}
+	.prutt-emoji {
+		position: absolute;
+		font-size: 8vw;
+		opacity: 0;
+		animation: fadeIn 1s ease-in-out, fadeOut 1s ease-in-out 1s forwards;
+		right: 15vw;
+		transform: rotate(20deg) !important;
+	}
+	@keyframes fadeIn {
+		0% { opacity: 0; transform: translateY(10px); }
+		100% { opacity: 1; transform: translateY(0); }
+	}
+	@keyframes fadeOut {
+		0% { opacity: 1; }
+		100% { opacity: 0; }
+	}
+	p {
+		font-family: "Comic Sans MS", cursive;
+		font-size: 2.5vw;
+		text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+		transform: rotate(-1deg);
+		background: linear-gradient(to right, #4E3629, #2F1B0A);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: #4E3629;
+	}
+
+	input, button {
+		font-family: "Comic Sans MS", cursive;
+		font-size: 2vw;
+		color: #3D2B1F;
+		background: #bcb88a;
+		border: 2px solid #2F1B0A;
+		padding: 10px 15px;
+		border-radius: 5px;
+        margin-top: 20px;
+    }
+	
+	button:hover {
+		background: #bdb76b;
+		transform: scale(1.1);
+	}
+	
+	button:active,
+	button.active {
+		transform: scale(0.9);
+	}
+	@keyframes bajsFall {
+		0% { transform: translateY(-100px) rotate(0deg); opacity: 1 }
+		100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+	}
+	.bajs {
+		position: absolute;
+		top: -10vh;
+		font-size: 3vw;
+		animation: bajsFall 3s linear infinite;
+	}
+</style>
+</head>
+<body>
+    <h1>Bajsar rumpan varje gång?</h1>
+		<span class="prutt-emoji">💨</span>
+		<span class="prutt-emoji">💨</span>
+		<span class="prutt-emoji">💨</span>
+    <input type="text" id="userInput" placeholder="Skriv ditt svar här tack">
+    <button onclick="playPruttLjud(); getResponse()">Svara</button>
+    <p id="response"></p>
+	
+	<audio id="pruttLjud" src="sounds/prutt.mp3"></audio>
+
+    <script>
+		function playPruttLjud() {
+			let pruttLjud = document.getElementById("pruttLjud");
+				pruttLjud.play();
+			}
+			
+		let countdownInterval;
+			
+		function getResponse() {
+			
+			let userInput = document.getElementById("userInput").value.trim();
+			let responseParagraph = document.getElementById("response");
+			
+			if (countdownInterval) {
+				clearInterval(countdownInterval);
+				countdownInterval = null;
+			}
+			if (!userInput) {
+				setTimeout(() => {
+					responseParagraph.innerHTML = "Skriv något din dumma jävel!";
+				}, 400);
+				return;
+			}
+			if (userInput.toLowerCase() === "ja") {
+				setTimeout(() => {
+					responseParagraph.innerHTML = "Det är helt rätt! Helvete vad episk du är! Bajsa bajsa, rumpan han bajsar varje gång! Det blir partaj om <span id='countdown'>10</span> sek...";
+				}, 400);
+			} else if (userInput.toLowerCase() === "nej") {
+				setTimeout(() => {
+					responseParagraph.innerHTML = "Neeej för helvete! Jävla idiot... Rumpan han bajsar varje gång! Nu ska du få se varför om <span id='countdown'>10</span> sek...";
+				}, 400);
+			} else {
+				setTimeout(() => {
+				responseParagraph.innerHTML = "Asså är du puckad? Jag förstår bara om du svarar ja eller nej!";
+				}, 400);
+				return;
+			}
+			let count = 10;
+				countdownInterval = setInterval(function() {
+				count--;
+				document.getElementById("countdown").innerText = count;
+				if (count === 0) {
+					clearInterval(countdownInterval);
+					window.location.href = "https://www.youtube-nocookie.com/embed/Q4e6KIltQvM?autoplay=1";
+				}
+			}, 1000);
+		}
+		
+		document.getElementById("userInput").addEventListener("keypress", function(event) {
+			if (event.key === "Enter") {
+				let button = document.querySelector("button");
+				button.classList.add("active");
+				setTimeout(() => {
+					button.classList.remove("active");
+				}, 150);
+				playPruttLjud();
+				getResponse();
+            }
+		});
+		document.getElementById("userInput").addEventListener("input", function() {
+			if (countdownInterval) {
+				clearInterval(countdownInterval);
+				countdownInterval = null;
+				document.getElementById("response").innerHTML = "";
+			}
+        });
+		
+		function skapaBajs() {
+			const bajsEmoji = document.createElement("div");
+			bajsEmoji.innerHTML = "💩";
+			bajsEmoji.classList.add("bajs");
+			bajsEmoji.style.left = Math.random() * 90 + "vw";
+			bajsEmoji.style.fontSize = Math.random() * 5 + 3 + "vw";
+			bajsEmoji.style.animationDuration = (Math.random() * 2 + 2) + "s";
+			document.body.appendChild(bajsEmoji);
+			setTimeout(() => {
+				bajsEmoji.remove();
+			}, 3000);
+		}
+		setInterval(skapaBajs, 500);
+		
+			window.onload = function() {
+				playPruttLjud();
+				document.getElementById("userInput").focus();
+			
+				window.addEventListener("resize", () => {
+				document.querySelectorAll(".prutt-emoji").forEach(emoji => {
+					emoji.style.fontSize = "8vw";
+				});
+			
+				document.querySelectorAll(".bajs").forEach(bajs => {
+					bajs.style.fontSize = Math.random() * 5 + 3 + "vw";
+				});
+			
+			});
+        };
+	</script>
+</body>
+</html>

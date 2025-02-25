@@ -1,0 +1,9 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.example.bajsa
+productName: Bajsa
+win:
+  icon: icon.ico
+files: []
+electronVersion: 29.4.6
